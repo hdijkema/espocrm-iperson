@@ -1,0 +1,69 @@
+{
+    "actualFields":[
+        "salutation",
+        "first",
+        "last",
+        "middle",
+	    "initials"
+    ],
+    "notActualFields": [
+        ""
+    ],
+    "params":[
+       {
+            "name":"required",
+            "type":"bool", 
+            "default":false
+        }
+    ],
+    "fields":{
+        "salutation":{
+            "type":"enum"
+        },
+        "first":{
+            "type":"varchar",
+            "trim": true
+        },
+        "last":{
+            "type":"varchar",
+            "trim": true
+        },
+        "middle":{
+            "type": "varchar",
+            "trim": true,
+            "maxLength": 100
+        },
+        "initials":{
+            "type": "varchar",
+            "trim": true,
+            "maxLength": 20
+        }
+    },
+    "naming": "prefix",
+    "notMergeable":true,
+    "notCreatable":true,
+    "filter": true,
+    "skipOrmDefs": true,
+    "personalData": true,
+    "textFilter": true,
+    "fullTextSearch": true,
+    "validationList": [ "required" ],
+    "fullTextSearchColumnList": [
+        "first",
+        "last"
+    ],
+    "fieldOrders": {
+         "default": [ "initials", "first", "last" ],
+         "lastFirst": [ "last", "initials", "first" ],
+         "lastFirstMiddle": [ "last", "initials", "first", "middle" ],
+         "firstMiddleLast": [ "initials", "first", "middle", "last" ],
+         "firstLast": [ "initials", "first", "last" ]
+    },
+    "patterns": {
+         "default": "{{initials}} ({{first}}) {{last}}|{{first}} {{last}}|{{initials}} {{last}}|{{last}}",
+         "lastFirst": "{{last}}, {{initials}} ({{first}})|{{last}}, {{first}}",
+         "lastFirstMiddle": "{{last}}, {{initials}} ({{first}}) {{middle}}|{{last}}, {{first}}, {{middle}}|{{last}}, {{initials}}, {{middle}}",
+         "firstMiddleLast": "{{initials}} ({{first}}) {{middle}} {{last}}|{{first}} {{middle}} {{last}}|{{initials}} {{middle}} {{last}}",
+         "firstLast": "{{initials}} ({{first}}) {{last}}|{{first}} {{last}}|{{initials}} {{last}}|{{last}}" 
+    }
+}

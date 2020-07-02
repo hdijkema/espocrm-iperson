@@ -1,0 +1,16 @@
+{
+    "fields": {
+    	"name": {
+            "type": "ipersonName",
+            "view": "iperson:views/fields/iperson-name",
+            "isPersonalData": true
+        },
+    	"initialsName": {
+            "type": "varchar",
+            "maxLength": 20,
+            "trim": true,
+            "isCustom": true,
+            "default": ""
+        }
+    }
+}
