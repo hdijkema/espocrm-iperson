@@ -1,2 +1,2 @@
-# person-plus-for-espocrm
-Ability to add Mother Maiden name as a field for entities type 'Person'
+# IPerson Module for EspoCRM
+Module IPerson - a PersonName field with Initials for EspoCRM
