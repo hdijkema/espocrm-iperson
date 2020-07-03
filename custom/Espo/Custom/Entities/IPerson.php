@@ -31,23 +31,15 @@
  * Based on the work of PersonPlus by Omar A Gonsenheim
  ************************************************************************/ 
 
-namespace Espo\Modules\IPerson\Entities;
+namespace Espo\Custom\Entities;
 
 use Espo\Core\Utils\Config;
 
 class IPerson extends \Espo\Core\Entities\Person
 {
-    public function __construct()
-    {
-        error_log('IPerson is created');
-        $GLOBALS['log']->warning('IPerson.php Field, line 44');
-    }
-
     public function _setInitialsName($value)
     {
         $this->setValue('initialsName', $value);
-
-        $GLOBALS['log']->warning('IPerson.php Field, line 44');
 
         $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
 

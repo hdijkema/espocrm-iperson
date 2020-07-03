@@ -40,6 +40,9 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
     private function getFields($format, $fieldName)
     {
         switch ($format) {
+            case 'foreign':
+                $subList = ['middle' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName), ' ', 'initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName) ];
+                break;
             case 'lastFirst':
                 $subList = ['last' . ucfirst($fieldName), ' ', 'initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName)];
                 break;
@@ -49,13 +52,11 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
                     'last' . ucfirst($fieldName), ' ', 'initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName), ' ', 'middle' . ucfirst($fieldName)
                 ];
                 break;
-
             case 'firstMiddleLast':
                 $subList = [
                     'initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName), ' ', 'middle' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)
                 ];
                 break;
-
             default:
                 $subList = ['initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)];
         }
@@ -103,7 +104,7 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
         $firstColumn = $tableName . '.' . Util::toUnderScore('first' . $uname);
         $lastColumn = $tableName . '.' . Util::toUnderScore('last' . $uname);
         $middleColumn = $tableName . '.' . Util::toUnderScore('middle' . $uname);
-		$initialsColumn = $tableName . '.'. Util::toUnderScore('letters' . $uname);
+		$initialsColumn = $tableName . '.'. Util::toUnderScore('initials' . $uname);
 
         $whereString = "".implode(" OR ", $parts);
 
@@ -149,8 +150,7 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
     
     public function getForeignField(string $fieldName, string $entityType)
     {
-        $format = $this->config->get('personNameFormat');
-        return $this->getFields($format, $fieldName);
+        return $this->getFields('foreign', $fieldName);
     }
 
 }

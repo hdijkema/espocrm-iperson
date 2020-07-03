@@ -10,7 +10,7 @@ else
 fi
 
 CMD=$1;
-VERSION="0.2.7"
+VERSION=`cat VERSION`
 EXT="iperson-extension"
 NAME="Field PersonName with initials - IpersonName"
 DESCRIPTION="Creates a new IpersonName Field type that can be used instead of PersonName, which also has initials"

@@ -58,6 +58,8 @@ class IPersonHelper extends \Espo\Core\ORM\Helper
 		$entityDefs = $metadata->get('entityDefs');
         $pattern = null;
 
+		#$GLOBALS['log']->warning('formatPersonName:'.$entityType);
+
         if (isset($entityDefs[$entityType])) {
            $entityDef = $entityDefs[$entityType];
            if (isset($entityDef['fields'])) {

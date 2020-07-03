@@ -31,7 +31,7 @@
  * Based on the work of PersonPlus by Omar A Gonsenheim
 ************************************************************************/ 
 
-namespace Espo\Modules\IPerson\Entities;
+namespace Espo\Custom\Entities;
 
 class Contact extends IPerson
 {
