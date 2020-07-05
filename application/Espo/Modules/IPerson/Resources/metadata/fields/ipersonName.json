@@ -4,7 +4,7 @@
         "first",
         "last",
         "middle",
-	    "initials"
+        "initials"
     ],
     "notActualFields": [
         ""
@@ -51,19 +51,5 @@
     "fullTextSearchColumnList": [
         "first",
         "last"
-    ],
-    "fieldOrders": {
-         "default": [ "initials", "first", "last" ],
-         "lastFirst": [ "last", "initials", "first" ],
-         "lastFirstMiddle": [ "last", "initials", "first", "middle" ],
-         "firstMiddleLast": [ "initials", "first", "middle", "last" ],
-         "firstLast": [ "initials", "first", "last" ]
-    },
-    "patterns": {
-         "default": "{{initials}} ({{first}}) {{last}}|{{first}} {{last}}|{{initials}} {{last}}|{{last}}",
-         "lastFirst": "{{last}}, {{initials}} ({{first}})|{{last}}, {{first}}",
-         "lastFirstMiddle": "{{last}}, {{initials}} ({{first}}) {{middle}}|{{last}}, {{first}}, {{middle}}|{{last}}, {{initials}}, {{middle}}",
-         "firstMiddleLast": "{{initials}} ({{first}}) {{middle}} {{last}}|{{first}} {{middle}} {{last}}|{{initials}} {{middle}} {{last}}",
-         "firstLast": "{{initials}} ({{first}}) {{last}}|{{first}} {{last}}|{{initials}} {{last}}|{{last}}" 
-    }
+    ]
 }

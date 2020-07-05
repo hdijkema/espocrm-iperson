@@ -102,47 +102,30 @@ define('iperson:views/fields/iperson-name', 'views/fields/person-name', function
             var middle = this.model.get(this.middleField);
             var initials = this.model.get(this.initialsField);
 
-            if (salutation) {
-                salutation = this.getLanguage().translateOption(salutation, 'salutationName', this.model.entityType);
-            }
+			if (salutation === null) { salutation = ''; }
+			if (initials === null) { initials = ''; }
+			if (first === null) { first = ''; }
+			if (middle === null) { middle = ''; }
+			if (last === null) { last = ''; }
+			if (initials !== '') { first = '(' + first + ')'; }
+			
+			console.log('hi!');
 
-            var open = '';
-            var close = '';
-            if (initials) { 
-                open = '(';
-                close = ')';
-            }
-
-            if (format === 'firstMiddleLast') {
-                if (salutation) value += salutation;
-                if (initials) value += ' ' + initials;
-                if (first) value += ' ' + open + first + close;
-                if (middle) value += ' ' + middle;
-                if (last) value += ' ' + last;
-            } else if (format === 'lastFirst') {
-                var comma = '';
-                if (initials || first) comma = ',';
-                if (salutation) value += salutation;
-                if (last) value += ' ' + last + comma;
-                if (initials) value += ' ' + initials;
-                if (first) value += ' ' + open + first + close;
-            } else if (format === 'lastFirstMiddle') {
-                var comma = '';
-                if (initials || first) comma = ',';
-                if (salutation) value += salutation;
-                if (last) value += ' ' + last + comma;
-                if (initials) value += ' ' + initials;
-                if (first) value += ' ' + open + first + close;
-                if (middle) value += ' ' + middle;
-            } else { // firstLast and all others
-                if (salutation) value += salutation;
-                if (initials) value += ' ' + initials;
-                if (first) value += ' ' + open + first + close;
-                if (last) value += ' ' + last;
-            }
-
-            value = value.trim();
-            return value;
+            if (salutation !== '') { salutation = this.getLanguage().translateOption(salutation, 'salutationName', this.model.entityType); }
+			
+			var fmt = function() {
+            	if (format === 'firstMiddleLast') {
+            		return salutation + ' ' + initials + ' ' + first + ' ' + middle + ' ' + last;
+            	} else if (format === 'lastFirst') {
+            		return last + ', ' + salutation + ' ' + initials + ' ' + first;
+            	} else if (format === 'lastFirstMiddle') {
+            		return last + ', ' + salutation + ' ' + initials + ' ' + first + ' ' + middle;
+            	} else { // firstLast 
+            		return salutation + ' ' + initials + ' ' + first + ' ' + last;
+            	}
+			}
+			
+			return fmt().replace('  ', ' ').trim();
         },
 
         fetch: function (form) {

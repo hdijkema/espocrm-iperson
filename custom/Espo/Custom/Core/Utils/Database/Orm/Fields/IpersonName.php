@@ -41,12 +41,11 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
     {
         switch ($format) {
             case 'foreign':
-                $subList = ['middle' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName), ' ', 'initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName) ];
+                $subList = ['last' . ucfirst($fieldName), 'ipersonSep', 'initials' . ucfirst($fieldName), 'ipersonSep', 'first' . ucfirst($fieldName), 'ipersonSep', 'middle' . ucfirst($fieldName) ];
                 break;
             case 'lastFirst':
                 $subList = ['last' . ucfirst($fieldName), ' ', 'initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName)];
                 break;
-
             case 'lastFirstMiddle':
                 $subList = [
                     'last' . ucfirst($fieldName), ' ', 'initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName), ' ', 'middle' . ucfirst($fieldName)
@@ -68,17 +67,11 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
     {
         $format = $this->config->get('personNameFormat');
 
-	$subList = $this->getFields($format, $fieldName);
+		$subList = $this->getFields($format, $fieldName);
 
         $tableName = Util::toUnderScore($entityName);
 
-        /*if ($format === 'lastFirstMiddle' || $format === 'lastFirst') {
-            $orderBy1Field = 'last' . ucfirst($fieldName);
-            $orderBy2Field = 'first' . ucfirst($fieldName);
-        } else {
-            $orderBy1Field = 'first' . ucfirst($fieldName);
-            $orderBy2Field = 'last' . ucfirst($fieldName);
-        }*/
+        // Always order by lastname 
         $orderBy1Field = 'last' . ucfirst($fieldName);
         $orderBy2Field = 'initials' . ucfirst($fieldName);
 
@@ -104,7 +97,7 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
         $firstColumn = $tableName . '.' . Util::toUnderScore('first' . $uname);
         $lastColumn = $tableName . '.' . Util::toUnderScore('last' . $uname);
         $middleColumn = $tableName . '.' . Util::toUnderScore('middle' . $uname);
-		$initialsColumn = $tableName . '.'. Util::toUnderScore('initials' . $uname);
+	$initialsColumn = $tableName . '.'. Util::toUnderScore('initials' . $uname);
 
         $whereString = "".implode(" OR ", $parts);
 
@@ -154,6 +147,3 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
     }
 
 }
-
-
-

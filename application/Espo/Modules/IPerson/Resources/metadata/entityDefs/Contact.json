@@ -11,6 +11,11 @@
             "trim": true,
             "isCustom": true,
             "default": ""
+        },
+        "ipersonSep": {
+             "type": "char",
+             "default": "@#@",
+             "length": 3
         }
     }
 }

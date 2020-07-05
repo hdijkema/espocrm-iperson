@@ -30,52 +30,52 @@ define('iperson:views/fields/iperson-link', 'views/fields/link', function (Dep) 
 
     return Dep.extend({
 
-        re_initials: /^([^.]+)[ ](([^.]+[.])+[ ])?(.*)\s*$/,
+        getFormat: function () {
+            this.format = this.format || this.getConfig().get('personNameFormat') || 'firstLast';
 
-        nameValue: '',
-
-        data: function () {
-	        var nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName);
-	        if (nameValue === null) {
-	            nameValue = this.model.get(this.idName);
-	        }
-	        if (this.isReadMode() && !nameValue && this.model.get(this.idName)) {
-	            nameValue = this.translate(this.foreignScope, 'scopeNames');
-	        }
-	
-	        var iconHtml = null;
-	        if (this.mode === 'detail') {
-	            iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
-	        }
-	
-	        var re_initials = this.re_initials;
-                var self = this;
-	        nameValue = nameValue.replace(re_initials, function(match, lastname, initials, $3, firstname, offset, orig) {
-                       if (lastname === undefined) { lastname = ''; } else { lastname = lastname.trim(); }
-                       if (initials === undefined) { initials = ''; } else { initials = initials.trim(); }
-                       if (firstname === undefined) { firstname = ''; } else { firstname = firstname.trim(); }
-                       if (initials == '') {
-                          return firstname + ' ' + lastname;
-                       } else {
-                          return initials + ' (' + firstname + ') ' + lastname;
-                       }
-	        });
-
-                var obj = _.extend({
-	            idName: this.idName,
-	            nameName: this.nameName,
-	            idValue: this.model.get(this.idName),
-	            nameValue: nameValue,
-	            foreignScope: this.foreignScope,
-	            valueIsSet: this.model.has(this.idName),
-	            iconHtml: iconHtml
-	        }, Dep.prototype.data.call(this));
-
-                obj.nameValue = nameValue;
-                obj.value = nameValue;
-
-                return obj;
+            return this.format;
         },
 
-    });
+        data: function () {
+        	var obj = Dep.prototype.data.call(this);
+			var self = this;
+			if (obj.nameValue !== undefined) {
+				console.log(obj.nameValue);
+				var parts = obj.nameValue.split('@#@');
+				if (parts.length != 4) { return obj; }
+				
+				var last = parts[0];
+				var initials = parts[1];
+				var first = parts[2];
+				var middle = parts[3];
+				
+				obj.nameValue = this.getFormattedName(initials, first, middle, last);
+	            obj.value = obj.nameValue;
+        	}
+            return obj;
+    	},
+    	
+    	getFormattedName: function(initials, firstname, middle, last) {
+            var format = this.getFormat();
+            
+            if (initials !== '') { 
+            	if (firstname !== '') { firstname = '(' + firstname + ')'; }
+            }
+            
+            var fmt_fml = function() {
+            	return initials + ' ' + firstname + ' ' + middle + ' ' + last;
+            };
+            
+            var fmt_lfm = function() {
+            	return last + ', ' + initials + ' ' + firstname + ' ' + middle;
+            };
+            
+            if (format == 'lastFirstMiddle' || format == 'lastFirst') {
+            	return fmt_lfm().replace('  ', ' ').trim();
+            } else {
+            	return fmt_fml().replace('  ', ' ').trim();
+            }
+    	},
+
+	});
 });
