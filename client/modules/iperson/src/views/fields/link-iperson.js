@@ -26,37 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('iperson:views/fields/iperson-link', 'views/fields/link', function (Dep) {
-
-    return Dep.extend({
-
-        getFormat: function () {
-            this.format = this.format || this.getConfig().get('personNameFormat') || 'firstLast';
-
-            return this.format;
+define('iperson:views/fields/link-iperson', [], function () {
+    return {
+        getFormattedName: function(format, last_initials_first_middle) {
+            if (last_initials_first_middle === null) {
+                return '';
+            } else if (last_initials_first_middle === undefined) {
+                return '';
+            } else {
+                var parts = last_initials_first_middle.split('@#@');
+                if (parts.length != 4) { return last_initials_first_middle; }
+                return this.internalFormattedName(format, parts[1], parts[2], parts[3], parts[0]);
+            }
         },
-
-        data: function () {
-        	var obj = Dep.prototype.data.call(this);
-			var self = this;
-			if (obj.nameValue !== undefined) {
-				console.log(obj.nameValue);
-				var parts = obj.nameValue.split('@#@');
-				if (parts.length != 4) { return obj; }
-				
-				var last = parts[0];
-				var initials = parts[1];
-				var first = parts[2];
-				var middle = parts[3];
-				
-				obj.nameValue = this.getFormattedName(initials, first, middle, last);
-	            obj.value = obj.nameValue;
-        	}
-            return obj;
-    	},
     	
-    	getFormattedName: function(initials, firstname, middle, last) {
-            var format = this.getFormat();
+    	internalFormattedName: function(format, initials, firstname, middle, last) {
             
             if (initials !== '') { 
             	if (firstname !== '') { firstname = '(' + firstname + ')'; }
@@ -77,5 +61,5 @@ define('iperson:views/fields/iperson-link', 'views/fields/link', function (Dep) 
             }
     	},
 
-	});
+    };
 });

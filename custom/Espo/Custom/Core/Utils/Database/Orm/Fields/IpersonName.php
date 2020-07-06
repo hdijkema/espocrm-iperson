@@ -39,7 +39,7 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
 {
     private function getFields($format, $fieldName)
     {
-        switch ($format) {
+        /*switch ($format) {
             case 'foreign':
                 $subList = ['last' . ucfirst($fieldName), 'ipersonSep', 'initials' . ucfirst($fieldName), 'ipersonSep', 'first' . ucfirst($fieldName), 'ipersonSep', 'middle' . ucfirst($fieldName) ];
                 break;
@@ -58,7 +58,15 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
                 break;
             default:
                 $subList = ['initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)];
-        }
+        }*/
+        $subList = ['last' . ucfirst($fieldName), 'ipersonSep', 
+                    'initials' . ucfirst($fieldName), 'ipersonSep', 
+                    'first' . ucfirst($fieldName), 'ipersonSep', 
+                    'middle' . ucfirst($fieldName) 
+                   ];
+                #$subList = [
+                    #'initials' . ucfirst($fieldName), ' ', 'first' . ucfirst($fieldName), ' ', 'middle' . ucfirst($fieldName), ' ', 'last' . ucfirst($fieldName)
+                #];
         
         return $subList;
     }
@@ -67,7 +75,7 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
     {
         $format = $this->config->get('personNameFormat');
 
-		$subList = $this->getFields($format, $fieldName);
+	$subList = $this->getFields($format, $fieldName);
 
         $tableName = Util::toUnderScore($entityName);
 
@@ -146,4 +154,8 @@ class IpersonName extends \Espo\Core\Utils\Database\Orm\Fields\PersonName
         return $this->getFields('foreign', $fieldName);
     }
 
+    protected function getSelect($fullList) 
+    {
+       return parent::getSelect($fullList);
+    }
 }

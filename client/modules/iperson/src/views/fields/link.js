@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -25,21 +24,24 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- * 
- * IPerson - Open source plugin module for EspoCRM - Contacts with initials
- * 2020 Hans Dijkema
- * Based on the work of PersonPlus by Omar A Gonsenheim
-************************************************************************/
+ ************************************************************************/
 
-namespace Espo\Custom\Core\Loaders;
+define('iperson:views/fields/link', [ 'views/fields/link', 'iperson:views/fields/link-iperson'], function (Dep, LI) {
 
-class EntityManagerHelper extends \Espo\Core\Loaders\Base
-{
-    public function load()
-    {
-        $container = $this->getContainer();
-        $config = $container->get('config');
+    return Dep.extend({
 
-        return new \Espo\Modules\IPerson\Helpers\IPersonHelper($config);
-    }
-}
+        getFormat: function () {
+            this.format = this.format || this.getConfig().get('personNameFormat') || 'firstLast';
+            return this.format;
+        },
+
+        data: function () {
+             var obj = Dep.prototype.data.call(this);
+             if (obj.nameValue !== undefined) {
+                 obj.nameValue = LI.getFormattedName(this.getFormat(), obj.nameValue);
+                 obj.value = obj.nameValue;
+             }
+             return obj;
+    	},
+    });
+});

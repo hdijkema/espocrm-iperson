@@ -1,0 +1,12 @@
+{
+  "functionClassNameMap": {
+	"IPerson\\Name": "\\Espo\\Modules\\IPerson\\Core\\Formula\\Functions\\IpersonGroup\\NameType",
+	"IPerson\\name": "\\Espo\\Modules\\IPerson\\Core\\Formula\\Functions\\IpersonGroup\\NameType",
+	"Iperson\\Name": "\\Espo\\Modules\\IPerson\\Core\\Formula\\Functions\\IpersonGroup\\NameType",
+	"Iperson\\name": "\\Espo\\Modules\\IPerson\\Core\\Formula\\Functions\\IpersonGroup\\NameType",
+	"iperson\\Name": "\\Espo\\Modules\\IPerson\\Core\\Formula\\Functions\\IpersonGroup\\NameType",
+	"iperson\\name": "\\Espo\\Modules\\IPerson\\Core\\Formula\\Functions\\IpersonGroup\\NameType",
+	"iPerson\\Name": "\\Espo\\Modules\\IPerson\\Core\\Formula\\Functions\\IpersonGroup\\NameType",
+	"iPerson\\name": "\\Espo\\Modules\\IPerson\\Core\\Formula\\Functions\\IpersonGroup\\NameType"
+  }
+}

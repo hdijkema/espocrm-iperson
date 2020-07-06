@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -25,24 +24,27 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- * 
- * IPerson - Open source plugin module for EspoCRM - Contacts with initials
- * 2020 Hans Dijkema
- * Based on the work of PersonPlus by Omar A Gonsenheim
  ************************************************************************/
- # NOT WORKING, NEED TO STORE UNDER custom/Espo/Custom FOLDER AND USE NAMESPACE Espo\Custom\Core\Loaders INSTEAD
 
-namespace Espo\Modules\IPerson\Core\Loaders;
+Espo.define('iperson:views/fields/link-multiple', [ 'views/fields/link-multiple', 'iperson:views/fields/link-iperson' ], function (Dep, LI) {
 
-class EntityManagerHelper extends \Espo\Core\Loaders\Base
-{
-    public function load()
-    {
-		$container = $this->getContainer();
-		$config = $container->get('config');
-		$metadata = $container->get('metadata');
+    return Dep.extend({
 
-        return new \Espo\Custom\Core\ORM\IPersonHelper ($config, $metadata);
-    }
-}
-?>
+        getFormat: function () {
+            this.format = this.format || this.getConfig().get('personNameFormat') || 'firstLast';
+            return this.format;
+        },
+
+        copyValuesFromModel: function() {
+             Dep.prototype.copyValuesFromModel.call(this);
+             var self = this;
+             var format = this.getFormat();
+             this.ids.forEach(function (id) {
+                 self.nameHash[id] = LI.getFormattedName(format, self.nameHash[id]);
+             });
+         },
+
+    });
+});
+
+

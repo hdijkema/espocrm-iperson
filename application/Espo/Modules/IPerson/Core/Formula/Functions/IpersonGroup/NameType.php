@@ -25,56 +25,69 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- * 
- * IPerson - Open source plugin module for EspoCRM - Contacts with initials
- * 2020 Hans Dijkema
- * Based on the work of PersonPlus by Omar A Gonsenheim
  ************************************************************************/
 
-namespace Espo\Modules\IPerson\Helpers;
+namespace Espo\Modules\IPerson\Core\Formula\Functions\IpersonGroup;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\Exceptions\Error;
 
-use Espo\ORM\Entity;
-
-class IPersonHelper extends \Espo\Core\ORM\Helper
+class NameType extends \Espo\Core\Formula\Functions\Base
 {
-
-    public function formatPersonName(Entity $entity, string $field)
+    protected function getFormat()
     {
-        $format = $this->config->get('personNameFormat');
-		
-        $first = $entity->get('first' . ucfirst($field));
-        $last = $entity->get('last' . ucfirst($field));
-        $middle = $entity->get('middle' . ucfirst($field));
-        $initials = $entity->get('initials' . ucfirst($field));
+        return "firstMiddleLast";
+    }
 
+    protected function getFormattedName($last, $initials, $first, $middle)
+    {
+        $format = $this->getFormat();
         if (!$first) $first = '';
         if (!$last) $last = '';
         if (!$middle) $middle = '';
         if (!$initials) $initials = '';
         if ($initials != '' && $first != '') {
-            $first = '(' . $first . ')';
+             $first = '(' . $first . ')';
         }
 		
         switch ($format) {
             case 'lastFirst':
-            	$nm = $last . ', ' . $initials . ' ' . $first;
+                $nm = $last . ', ' . $initials . ' ' . $first;
             case 'lastFirstMiddle':
-            	$nm = $last . ', ' . $initials . ' ' . $first . ' ' . $middle;
+                $nm = $last . ', ' . $initials . ' ' . $first . ' ' . $middle;
             case 'firstMiddleLast':
-            	$nm = $initials . ' ' . $first . ' ' . $middle . ' ' . $last;
+                $nm = $initials . ' ' . $first . ' ' . $middle . ' ' . $last;
             default: // firstLast
-            	$nm = $initials . ' ' . $first . ' ' . $last;
+                $nm = $initials . ' ' . $first . ' ' . $last;
         }
         
         $nm = trim(str_replace('  ', ' ', $nm));
-        
-        if ($nm != '') {
-        	return $nm;
+
+        return $nm;
+    }
+
+    public function process(\StdClass $item)
+    {
+        if (!property_exists($item, 'value')) {
+            throw new Error();
         }
 
-        // Nothing matched, so we call the base function
-        return parent::formatPersonName($entity, $field);
+        if (!is_array($item->value)) {
+            throw new Error();
+        }
+
+        if (count($item->value) != 1) {
+            throw new Error("iperson\name() has only one argument");
+        }
+
+        $name = $this->evaluate($item->value[0]);
+
+        // IPerson gives back last - initials - first - middle
+        $parts = explode('@#@', $name);
+	if (count($parts) != 4) {
+            return join(' ', $parts);
+        } else {
+            return $this->getFormattedName($parts[0], $parts[1], $parts[2], $parts[3]);
+        }
     }
 }
+
