@@ -102,30 +102,28 @@ define('iperson:views/fields/iperson-name', 'views/fields/person-name', function
             var middle = this.model.get(this.middleField);
             var initials = this.model.get(this.initialsField);
 
-			if (salutation === null) { salutation = ''; }
-			if (initials === null) { initials = ''; }
-			if (first === null) { first = ''; }
-			if (middle === null) { middle = ''; }
-			if (last === null) { last = ''; }
-			if (initials !== '') { first = '(' + first + ')'; }
-			
-			console.log('hi!');
-
+            if (salutation === null) { salutation = ''; }
+            if (initials === null) { initials = ''; }
+            if (first === null) { first = ''; }
+            if (middle === null) { middle = ''; }
+            if (last === null) { last = ''; }
+            if (initials !== '') { first = '(' + first + ')'; }
+            
             if (salutation !== '') { salutation = this.getLanguage().translateOption(salutation, 'salutationName', this.model.entityType); }
-			
-			var fmt = function() {
-            	if (format === 'firstMiddleLast') {
-            		return salutation + ' ' + initials + ' ' + first + ' ' + middle + ' ' + last;
-            	} else if (format === 'lastFirst') {
-            		return last + ', ' + salutation + ' ' + initials + ' ' + first;
-            	} else if (format === 'lastFirstMiddle') {
-            		return last + ', ' + salutation + ' ' + initials + ' ' + first + ' ' + middle;
-            	} else { // firstLast 
-            		return salutation + ' ' + initials + ' ' + first + ' ' + last;
-            	}
-			}
-			
-			return fmt().replace('  ', ' ').trim();
+            
+            var fmt = function() {
+                if (format === 'firstMiddleLast') {
+                    return salutation + ' ' + initials + ' ' + first + ' ' + middle + ' ' + last;
+                } else if (format === 'lastFirst') {
+                    return last + ', ' + salutation + ' ' + initials + ' ' + first;
+                } else if (format === 'lastFirstMiddle') {
+                    return last + ', ' + salutation + ' ' + initials + ' ' + first + ' ' + middle;
+                } else { // firstLast 
+                    return salutation + ' ' + initials + ' ' + first + ' ' + last;
+                }
+            }
+            
+            return fmt().replace('  ', ' ').trim();
         },
 
         fetch: function (form) {
