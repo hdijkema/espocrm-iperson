@@ -60,12 +60,16 @@ class IPersonHelper extends \Espo\Core\ORM\Helper
         switch ($format) {
             case 'lastFirst':
             	$nm = $last . ', ' . $initials . ' ' . $first;
+		break;
             case 'lastFirstMiddle':
             	$nm = $last . ', ' . $initials . ' ' . $first . ' ' . $middle;
+		break;
             case 'firstMiddleLast':
             	$nm = $initials . ' ' . $first . ' ' . $middle . ' ' . $last;
+		break;
             default: // firstLast
             	$nm = $initials . ' ' . $first . ' ' . $last;
+		break;
         }
         
         $nm = trim(str_replace('  ', ' ', $nm));
