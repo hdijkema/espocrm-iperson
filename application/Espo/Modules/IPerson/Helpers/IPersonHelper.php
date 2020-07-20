@@ -1,4 +1,5 @@
 <?php
+# vim: ts=4 sw=4 et:
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -42,12 +43,24 @@ class IPersonHelper extends \Espo\Core\ORM\Helper
 
     public function formatPersonName(Entity $entity, string $field)
     {
-        $format = $this->config->get('personNameFormat');
-		
         $first = $entity->get('first' . ucfirst($field));
         $last = $entity->get('last' . ucfirst($field));
         $middle = $entity->get('middle' . ucfirst($field));
         $initials = $entity->get('initials' . ucfirst($field));
+
+        $oke = true;
+        $str = $this->doFormat($last, $initials, $first, $middle, $oke);
+
+        if (!$oke) {
+            return parent::formatPersonName($entity, $field);
+        } else {
+            return $str;
+        }
+    }
+
+    private function doFormat($last, $initials, $first, $middle, &$oke)
+    {
+        $format = $this->config->get('personNameFormat');
 
         if (!$first) $first = '';
         if (!$last) $last = '';
@@ -60,16 +73,19 @@ class IPersonHelper extends \Espo\Core\ORM\Helper
         switch ($format) {
             case 'lastFirst':
             	$nm = $last . ', ' . $initials . ' ' . $first;
-		break;
+		    break;
+
             case 'lastFirstMiddle':
             	$nm = $last . ', ' . $initials . ' ' . $first . ' ' . $middle;
-		break;
+		    break;
+
             case 'firstMiddleLast':
             	$nm = $initials . ' ' . $first . ' ' . $middle . ' ' . $last;
-		break;
+		    break;
+
             default: // firstLast
             	$nm = $initials . ' ' . $first . ' ' . $last;
-		break;
+		    break;
         }
         
         $nm = trim(str_replace('  ', ' ', $nm));
@@ -79,6 +95,27 @@ class IPersonHelper extends \Espo\Core\ORM\Helper
         }
 
         // Nothing matched, so we call the base function
-        return parent::formatPersonName($entity, $field);
+        $oke = false;
+
+        return "";
+    }
+
+    public function formatForeignPersonName(Entity $entity, string $field)
+    {
+	    $sep = "@#@";
+	    $value = $entity->get($field);	 /// Will be last, initials, first, middle
+	    $a = explode($sep, $value);
+	    $last = $a[0];
+	    $initials = $a[1];
+	    $first = $a[2];
+	    $middle = $a[3];
+
+        $oke = true;
+	    $str = $this->doFormat($last, $initials, $first, $middle, $oke);
+        if ($oke) {
+            return $str;
+        } else {
+            return $value;
+        }
     }
 }
