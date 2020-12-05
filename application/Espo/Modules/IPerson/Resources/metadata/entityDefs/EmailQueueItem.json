@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "target": {
+	    "view": "iperson:views/fields/link"
+        }
+    }
+}
