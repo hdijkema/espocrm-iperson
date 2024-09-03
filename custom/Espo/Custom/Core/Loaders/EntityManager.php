@@ -43,15 +43,34 @@ class EntityManager extends \Espo\Core\Loaders\EntityManager
     {
         $obj = parent::load();
 
-        $cfgprop = new \ReflectionProperty('\\Espo\\Core\\ORM\\EntityManagerFactory', 'config');
-        $cfgprop->setAccessible(true);
-        $config = $cfgprop->getValue($this->entityManagerFactory);
 
-        $property = new \ReflectionProperty('\\Espo\\Core\\ORM\\EntityManager', 'helper');
-        $property->setAccessible(true);
+        if (isset($this->config)) {
+           $config = $this->config;
+        } else {
+           if (isset($this->entityManagerFactory)) {
+              # Post 6.0 EspoCRM
+              $cfgprop = new \ReflectionProperty('\\Espo\\Core\\ORM\\EntityManagerFactory', 'config');
+              $cfgprop->setAccessible(true);
+              $config = $cfgprop->getValue($this->entityManagerFactory);
+           } else {
+              # Assume pré 6.0 EspoCRM
+              $config = $this->getContainer()->get('config');
+           }
+        }
 
-        $helper = new IPersonHelper($config);
-        $property->setValue($obj, $helper);
+        $version = $config->get('version');
+        $parts = preg_split('/[.]/', $version, 3);
+        $v_maj = $parts[0] + 0;
+        $v_min = $parts[1] + 0;
+        $v_micro = $parts[2] + 0;
+
+        if ($v_maj >= 6 && $v_min >= 1) {
+           $property = new \ReflectionProperty('\\Espo\\Core\\ORM\\EntityManager', 'helper');
+           $property->setAccessible(true);
+
+           $helper = new IPersonHelper($config);
+           $property->setValue($obj, $helper);
+        }
 
         return $obj;
     }
